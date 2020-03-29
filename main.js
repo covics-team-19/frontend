@@ -8,7 +8,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const DIST_PATH = 
+const DIST_PATH = path.join(__dirname, 'frontend');
+const PORT = process.env.PORT || 8080;
 
 /* if (process.env.NODE_ENV === 'production') {
     logger.debug('httpsRedirect');
@@ -23,24 +24,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(DIST_PATH));
 
-logger.success('Added middlewares!!!');
-
-/* ADDING ROUTES */
-
-logger.hr();
-
-logger.info('Adding routes...');
-app.use('/api', routes());
-logger.success('Added routes!!!');
-
-/* STARTING SERVER */
-
-logger.hr();
-
-logger.info('Starting server...');
 app.listen(PORT, () => {
-    logger.success('Server started!!!');
-    logger.debug(`Server listening on port ${PORT}`);
-    logger.hr();
-    logger.br();
+    logger.success(`Server started on port ${PORT}`);
 });
