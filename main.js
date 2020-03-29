@@ -5,16 +5,17 @@ const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const httpsRedirect = require('./utils/httpsRedirect');
 
 const app = express();
 
 const DIST_PATH = path.join(__dirname, 'frontend');
 const PORT = process.env.PORT || 8080;
 
-/* if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     logger.debug('httpsRedirect');
     app.use(httpsRedirect);
-} */
+}
 
 app.use(compression());
 app.use(helmet());
