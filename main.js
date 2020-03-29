@@ -13,7 +13,6 @@ const DIST_PATH = path.join(__dirname, 'frontend');
 const PORT = process.env.PORT || 8080;
 
 if (process.env.NODE_ENV === 'production') {
-    logger.debug('httpsRedirect');
     app.use(httpsRedirect);
 }
 
