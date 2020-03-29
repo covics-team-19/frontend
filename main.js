@@ -25,5 +25,5 @@ app.use(bodyParser.json());
 app.use(express.static(DIST_PATH));
 
 app.listen(PORT, () => {
-    logger.success(`Server started on port ${PORT}`);
+    console.log(`Server started on port ${PORT}`);
 });
