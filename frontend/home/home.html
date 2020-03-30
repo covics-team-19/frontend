@@ -91,7 +91,7 @@
                     <span class="flag-icon flag-icon-{{distribution.country.toLowerCase()}}"></span>
                     {{countries2LettersCode[distribution.country]}}
                 </td>
-                <td class="text-right">{{distribution.number}}</td>
+                <td class="text-right">{{distribution.number | number:0}}</td>
             </tr>
             <tr ng-if="!countryData.length">
                 <td colspan="5">No suggestion found</td>
