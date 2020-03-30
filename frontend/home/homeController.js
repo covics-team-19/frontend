@@ -90,13 +90,6 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
                     };
                 });
                 geojsonsPerCountry[countryCode] = L.geoJson(geojsonData, {
-                    coordsToLatLng: function (coords) {
-                        let longitude = coords[0];
-                        let latitude = coords[1];
-                        let latlng = L.latLng(latitude, longitude < 0 ? longitude + 360 : longitude);
-
-                        return latlng.wrap();
-                    },
                     style: style,
                     onEachFeature: onEachFeature
                 });
@@ -144,6 +137,21 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
 
     //bind events to each geojson feature
     function onEachFeature(feature, layer) {
+        var bounds = layer.getBounds && layer.getBounds();
+        // The precision might need to be adjusted depending on your data
+        if (bounds && (Math.abs(bounds.getEast() + bounds.getWest())) < 0.1) {
+            var latlongs = layer.getLatLngs();
+            latlongs.forEach(function (shape) {
+                shape.forEach(function (cord) {
+                    if (cord.lng < 0) {
+                        console.log(feature.properties.countryCode, cord.lng);
+                        cord.lng += 360;
+                    }
+                });
+            });
+            layer.setLatLngs(latlongs);
+        }
+
         layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
