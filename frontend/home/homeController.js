@@ -92,6 +92,9 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
                 });
 
                 deferred.resolve();
+            }, function () {
+                console.log('Error while fetching country geojson: ' + countryCode)
+                deferred.resolve();
             });
         } else {
             deferred.resolve();
