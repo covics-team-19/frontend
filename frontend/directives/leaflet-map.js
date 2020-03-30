@@ -24,7 +24,7 @@ app.directive('geotrackingMap', ['$timeout', '$filter', function ($timeout, $fil
 
             $timeout(function () {
 
-                $scope.map = L.map('map_canvas', {attributionControl: false}).setView([0, 0], 2);
+                $scope.map = L.map('map_canvas', {attributionControl: false}).setView([22.998402, -0.798098], 3);
                 $scope.computeGMap('roadmap');
 
                 L.control.scale().addTo($scope.map);

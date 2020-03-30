@@ -57,7 +57,7 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
                     Object.keys(geojsonsPerCountry).forEach(function (countryCode) {
                         geojsonsPerCountry[countryCode].bindPopup(buildTooltipContent(countryCode)).addTo(capacityLayer);
                     });
-                    $scope.map.fitBounds(capacityLayer.getBounds());
+                    // $scope.map.fitBounds(capacityLayer.getBounds());
                     $scope.loading = false;
                 });
             });
@@ -137,21 +137,6 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
 
     //bind events to each geojson feature
     function onEachFeature(feature, layer) {
-        var bounds = layer.getBounds && layer.getBounds();
-        // The precision might need to be adjusted depending on your data
-        if (bounds && (Math.abs(bounds.getEast() + bounds.getWest())) < 0.1) {
-            var latlongs = layer.getLatLngs();
-            latlongs.forEach(function (shape) {
-                shape.forEach(function (cord) {
-                    if (cord.lng < 0) {
-                        console.log(feature.properties.countryCode, cord.lng);
-                        cord.lng += 360;
-                    }
-                });
-            });
-            layer.setLatLngs(latlongs);
-        }
-
         layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
