@@ -1,0 +1,60 @@
+<div class="view">
+
+    <geotracking-map on-map-created="onMapCreated(map)"></geotracking-map>
+
+</div>
+
+<script type="text/ng-template" id="countryDetailsTooltip.html">
+    <div class="country-tooltip">
+        <h2>
+            <span class="flag-icon flag-icon-{{selectedCountry.country_code.toLowerCase()}}"></span>
+            {{selectedCountry.country_name}}
+        </h2>
+        <table class="table table-bordered">
+            <tr>
+                <td></td>
+                <td class="text-center"><strong>Current</strong></td>
+                <td class="text-center"><strong>3 weeks pred.</strong></td>
+            </tr>
+            <tr>
+                <td>Resources capacity</td>
+                <td class="text-right">
+                    {{selectedCountry.resources_capacity | number:0}}
+                </td>
+                <td class="text-right" ng-style="{
+                        'background-color': selectedCountry.color,
+                        'color': selectedCountry.remaining_percent < 25 || !selectedCountry.resources_capacity ? '#fff' : '#333'}">
+                    {{getColor(10)}}
+                    ~{{selectedCountry.resources_prediction_3w | number:0}}
+                </td>
+            </tr>
+            <tr>
+                <td>Confirmed cases</td>
+                <td class="text-right">
+                    {{selectedCountry.confirmed | number:0}}
+                </td>
+                <td class="text-right">
+                    ~{{selectedCountry.confirmed_prediction_3w | number:0}}
+                </td>
+            </tr>
+            <tr>
+                <td>Deaths</td>
+                <td class="text-right">
+                    {{selectedCountry.deaths | number:0}}
+                </td>
+                <td class="text-right">
+                    ~{{selectedCountry.deaths_prediction_3w | number:0}}
+                </td>
+            </tr>
+            <tr>
+                <td>Recovered cases</td>
+                <td class="text-right">
+                    {{selectedCountry.recovered | number:0}}
+                </td>
+                <td class="text-right">
+                    ~{{selectedCountry.recovered_prediction_3w | number:0}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</script>

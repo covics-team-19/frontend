@@ -4,14 +4,16 @@
   "description": "The frontend of covics-19",
   "main": "main.js",
   "scripts": {
-    "start": "node main"
+    "start": "node main",
+    "postinstall": "npm run copy-libs",
+    "copy-libs": "cpx \"node_modules/{angular,angular-*,@uirouter,leaflet*,flag-icon-css,bootstrap/dist,@fortawesome,jquery/dist}/**/*\" frontend/lib -C"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/covics-team-19/frontend.git"
   },
-  "author": "Eugenio Vinicio Berretta <euberdeveloper@gmail.com>",
-  "license": "MIT",
+  "author": "Mohamed Zaim Wadghiri <mohamed.zaimwadghiri@gmail.com>",
+  "license": "GPL",
   "bugs": {
     "url": "https://github.com/covics-team-19/frontend/issues"
   },
@@ -22,6 +24,18 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^3.22.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "@uirouter/angularjs": "^1.0.7",
+    "angular": "1.7.x",
+    "bootstrap": "3.3.x",
+    "flag-icon-css": "^3.4.6",
+    "jquery": "3.3.x",
+    "leaflet": "^1.6.0",
+    "leaflet-easybutton": "^2.4.0",
+    "leaflet.gridlayer.googlemutant": "^0.8.0"
+  },
+  "devDependencies": {
+    "cpx": "^1.5.0"
   }
 }

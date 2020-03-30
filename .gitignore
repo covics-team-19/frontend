@@ -1,1 +1,8 @@
 node_modules
+logs/*
+!.gitkeep
+node_modules/
+frontend/lib/
+tmp
+.DS_Store
+.idea
