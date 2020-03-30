@@ -1,10 +1,15 @@
 <div class="view">
 
+    <div class="app-loader" ng-show="loading">
+        <img src="../images/app_loading.gif" alt="">
+    </div>
+
     <div class="presentation-alert alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
         SARS-CoV-2 is spreading rapidly through communities. Covics-19 matches countries'
-        required medical resources to their actual healthcare capacity and coordinates medical resource sharing among
+        required medical resources to their actual healthcare capacity and coordinates medical resource sharing
+        among
         them. <br/>
         <a href="https://devpost.com/software/covics-19" target="_blank">Learn more</a>
     </div>
@@ -17,26 +22,19 @@
     <div class="country-popup">
         <h2 class="clearfix">
             <span class="flag-icon flag-icon-{{predictions[selectedCountry].country_code.toLowerCase()}}"></span>
-            {{predictions[selectedCountry].country_name}}
+            {{countries2LettersCode[selectedCountry]}}
 
             <a href="" class="change-view-btn pull-right" ng-click="toggleView()"><i class="fa fa-exchange-alt"></i></a>
         </h2>
         <table class="table table-bordered" ng-show="view === 'predictions'">
             <tr>
+                <td class="text-center" colspan="5"><strong>Resources capacity:
+                    {{predictions[selectedCountry].resources_capacity | number:0}}</strong></td>
+            </tr>
+            <tr>
                 <td></td>
                 <td class="text-center"><strong>Current</strong></td>
                 <td class="text-center"><strong>3 weeks pred.</strong></td>
-            </tr>
-            <tr>
-                <td>Resources capacity</td>
-                <td class="text-right">
-                    {{predictions[selectedCountry].resources_capacity | number:0}}
-                </td>
-                <td class="text-right" ng-style="{
-                        'background-color': predictions[selectedCountry].color,
-                        'color': predictions[selectedCountry].remaining_percent < 25 || !predictions[selectedCountry].resources_capacity ? '#fff' : '#333'}">
-                    ~{{predictions[selectedCountry].resources_prediction_3w | number:0}}
-                </td>
             </tr>
             <tr>
                 <td>Confirmed cases</td>
@@ -65,6 +63,17 @@
                     ~{{predictions[selectedCountry].recovered_prediction_3w | number:0}}
                 </td>
             </tr>
+            <tr>
+                <td>Resources requirements</td>
+                <td class="text-right">
+                    {{predictions[selectedCountry].resources_requirements | number:0}}
+                </td>
+                <td class="text-right" ng-style="{
+                        'background-color': predictions[selectedCountry].color,
+                        'color': predictions[selectedCountry].remaining_percent < 25 || !predictions[selectedCountry].resources_capacity ? '#fff' : '#333'}">
+                    ~{{predictions[selectedCountry].resources_requirements_prediction_3w | number:0}}
+                </td>
+            </tr>
         </table>
 
         <table class="table table-bordered" ng-show="view === 'distributions'"
@@ -73,7 +82,8 @@
                 <td class="text-center" colspan="5"><strong>Recommended Exchange</strong></td>
             </tr>
             <tr>
-                <td class="text-center"><strong>{{distributions[selectedCountry].from.length > 0 ? 'From' : 'To'}}</strong></td>
+                <td class="text-center"><strong>{{distributions[selectedCountry].from.length > 0 ? 'From' :
+                    'To'}}</strong></td>
                 <td class="text-center"><strong>Number</strong></td>
             </tr>
             <tr ng-repeat="distribution in countryData">

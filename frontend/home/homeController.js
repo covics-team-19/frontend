@@ -21,6 +21,8 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
 
         let promises = [];
 
+        $scope.loading = true;
+
         GeodataService.getPredictions().then(function (predictions) {
             predictions.results.forEach(function (countryPredictions) {
                 countryPredictions.color = getColor(countryPredictions.remaining_percent);
@@ -56,6 +58,7 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
                         geojsonsPerCountry[countryCode].bindPopup(buildTooltipContent(countryCode)).addTo(capacityLayer);
                     });
                     $scope.map.fitBounds(capacityLayer.getBounds());
+                    $scope.loading = false;
                 });
             });
         });
@@ -87,13 +90,20 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
                     };
                 });
                 geojsonsPerCountry[countryCode] = L.geoJson(geojsonData, {
+                    coordsToLatLng: function (coords) {
+                        let longitude = coords[0];
+                        let latitude = coords[1];
+                        let latlng = L.latLng(latitude, longitude < 0 ? longitude + 360 : longitude);
+
+                        return latlng.wrap();
+                    },
                     style: style,
                     onEachFeature: onEachFeature
                 });
 
                 deferred.resolve();
             }, function () {
-                console.log('Error while fetching country geojson: ' + countryCode)
+                console.log('Error while fetching country geojson: ' + countryCode);
                 deferred.resolve();
             });
         } else {

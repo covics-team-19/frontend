@@ -11,7 +11,7 @@ app.factory('GeodataService', ['$http', '$q', function ($http, $q) {
             if (response.data && response.data) {
                 let datum = response.data;
                 datum.results.forEach(function (res) {
-                    res.remaining_capacity = res.resources_capacity - res.resources_prediction_3w;
+                    res.remaining_capacity = res.resources_capacity - res.resources_requirements_prediction_3w;
                     res.remaining_percent = 100 * (res.remaining_capacity / res.resources_capacity);
                 });
                 return datum;
