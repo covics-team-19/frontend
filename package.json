@@ -28,7 +28,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@uirouter/angularjs": "^1.0.7",
     "angular": "1.7.x",
-    "bootstrap": "3.3.x",
+    "bootstrap": "3.4.x",
     "flag-icon-css": "^3.4.6",
     "jquery": "3.3.x",
     "leaflet": "^1.6.0",
