@@ -35,7 +35,6 @@
                 <td class="text-right" ng-style="{
                         'background-color': predictions[selectedCountry].color,
                         'color': predictions[selectedCountry].remaining_percent < 25 || !predictions[selectedCountry].resources_capacity ? '#fff' : '#333'}">
-                    {{getColor(10)}}
                     ~{{predictions[selectedCountry].resources_prediction_3w | number:0}}
                 </td>
             </tr>

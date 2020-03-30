@@ -26,7 +26,7 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
                 countryPredictions.color = getColor(countryPredictions.remaining_percent);
                 let countryCode = countryPredictions.country_code;
                 $scope.predictions[countryCode] = countryPredictions;
-                computeCountryData(countryCode, promises);
+                computeCountryData(countryCode, promises, countryPredictions.remaining_percent);
             });
 
             GeodataService.getDistributions().then(function (distributions) {
