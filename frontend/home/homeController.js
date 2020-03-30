@@ -3,44 +3,101 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
     // holds the geojson value of each country
     let geojsonsPerCountry = {};
 
+    // holds the geojson value of each country
+    let displayedCountries = [];
+
     //holds the layers of all the countries with statistics values
     let capacityLayer = new L.FeatureGroup();
+
+    $scope.predictions = {};
+    $scope.distributions = {};
+
+    $scope.countries2LettersCode = countries2LettersCode;
 
     // called once the map is initialized
     $scope.onMapCreated = function (map) {
         $scope.map = map;
         capacityLayer.addTo($scope.map);
 
-        GeodataService.getAllStatistics().then(function (statistics) {
-            let promises = [];
-            statistics.results.forEach(function (countryResults) {
-                let deferred = $q.defer();
-                GeodataService.getCountryBorders(countryResults.country_code    .toLowerCase()).then(function (geojsonData) {
-                    countryResults.color = getColor(countryResults.remaining_percent);
-                    geojsonData.features.forEach(function (feature) {
-                        feature.properties = {
-                            countryResults: countryResults,
-                        };
-                    });
-                    geojsonsPerCountry[countryResults.country_code] = L.geoJson(geojsonData, {
-                        style: style,
-                        onEachFeature: onEachFeature
-                    }).bindTooltip(buildTooltipContent(countryResults), {
-                        permanent: false
-                    }).addTo(capacityLayer);
+        let promises = [];
 
-                    deferred.resolve();
-                });
-                promises.push(deferred.promise);
+        GeodataService.getPredictions().then(function (predictions) {
+            predictions.results.forEach(function (countryPredictions) {
+                countryPredictions.color = getColor(countryPredictions.remaining_percent);
+                let countryCode = countryPredictions.country_code;
+                $scope.predictions[countryCode] = countryPredictions;
+                computeCountryData(countryCode, promises);
             });
 
-            $q.all(promises).then(function () {
-                $scope.map.fitBounds(capacityLayer.getBounds());
-            })
+            GeodataService.getDistributions().then(function (distributions) {
+                distributions.forEach(function (countryDistribution) {
+                    if (!$scope.distributions[countryDistribution.recipient]) {
+                        $scope.distributions[countryDistribution.recipient] = {from: [], to: []}
+                    }
+                    if (!$scope.distributions[countryDistribution.donor]) {
+                        $scope.distributions[countryDistribution.donor] = {from: [], to: []}
+                    }
+
+                    $scope.distributions[countryDistribution.recipient].from.push({
+                        country: countryDistribution.donor,
+                        number: countryDistribution.transfer_amount
+                    });
+                    $scope.distributions[countryDistribution.donor].to.push({
+                        country: countryDistribution.recipient,
+                        number: countryDistribution.transfer_amount
+                    });
+
+                    computeCountryData(countryDistribution.recipient, promises, 0);
+                    computeCountryData(countryDistribution.donor, promises, 100);
+                });
+
+                $q.all(promises).then(function () {
+                    Object.keys(geojsonsPerCountry).forEach(function (countryCode) {
+                        geojsonsPerCountry[countryCode].bindPopup(buildTooltipContent(countryCode)).addTo(capacityLayer);
+                    });
+                    $scope.map.fitBounds(capacityLayer.getBounds());
+                });
+            });
         });
 
         addLegend();
     };
+
+    function computeCountryData(countryCode, promises, remaining_percent = 0) {
+        if (!$scope.predictions[countryCode]) {
+            $scope.predictions[countryCode] = {
+                country_code: countryCode,
+                country_name: $scope.countries2LettersCode[countryCode],
+                remaining_percent: remaining_percent
+            };
+        }
+        let deferred = computeGeojsonForCountry($scope.predictions[countryCode], countryCode, remaining_percent);
+        promises.push(deferred.promise);
+    }
+
+    function computeGeojsonForCountry(results, countryCode, remaining_percent) {
+        let deferred = $q.defer();
+        if (displayedCountries.indexOf(countryCode) < 0) {
+            displayedCountries.push(countryCode);
+            GeodataService.getCountryBorders(countryCode.toLowerCase()).then(function (geojsonData) {
+                geojsonData.features.forEach(function (feature) {
+                    feature.properties = {
+                        countryCode: countryCode,
+                        remaining_percent: remaining_percent
+                    };
+                });
+                geojsonsPerCountry[countryCode] = L.geoJson(geojsonData, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                });
+
+                deferred.resolve();
+            });
+        } else {
+            deferred.resolve();
+        }
+        return deferred;
+    }
 
     /**
      * Computes the color of the feature depending of the needed resources
@@ -56,9 +113,17 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
     }
 
     // build the tooltip content that should be displayed when mouse hovers on a a country
-    function buildTooltipContent(countryResults) {
+    function buildTooltipContent(countryCode) {
         let tooltipScope = $scope.$new(true);
-        tooltipScope.selectedCountry = countryResults;
+        tooltipScope.selectedCountry = countryCode;
+        tooltipScope.predictions = $scope.predictions;
+        tooltipScope.distributions = $scope.distributions;
+        tooltipScope.countries2LettersCode = $scope.countries2LettersCode;
+        tooltipScope.view = $scope.predictions[countryCode].confirmed_prediction_3w ? 'predictions' : 'distributions';
+        tooltipScope.toggleView = function () {
+            tooltipScope.view = tooltipScope.view === 'predictions' ? 'distributions' : 'predictions'
+        };
+
         let compiled = $compile($templateCache.get('countryDetailsTooltip.html'))(tooltipScope);
         // tooltipScope.$apply();
         return compiled[0];
@@ -78,14 +143,13 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
      * @param feature a geojson feature
      */
     function style(feature) {
-        let countryResults = feature.properties.countryResults;
         return {
             weight: 1,
             opacity: 1,
             color: 'white',
             dashArray: '1',
             fillOpacity: 0.7,
-            fillColor: getColor(countryResults.remaining_percent)
+            fillColor: getColor(feature.properties.remaining_percent)
         };
     }
 
@@ -112,8 +176,9 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
      */
 
     function resetHighlight(e) {
-        let countryCode = e.target.feature.properties.countryResults.country_code;
-        geojsonsPerCountry[countryCode].resetStyle(e.target);}
+        let countryCode = e.target.feature.properties.countryCode;
+        geojsonsPerCountry[countryCode].resetStyle(e.target);
+    }
 
     /**
      * Called when a click is triggerred on a feature

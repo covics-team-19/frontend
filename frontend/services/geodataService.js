@@ -6,7 +6,7 @@ app.factory('GeodataService', ['$http', '$q', function ($http, $q) {
         });
     };
 
-    let getAllStatistics = function () {
+    let getPredictions = function () {
         return $http.get('https://covics-backend.herokuapp.com/predictions').then(function (response) {
             if (response.data && response.data) {
                 let datum = response.data;
@@ -21,9 +21,16 @@ app.factory('GeodataService', ['$http', '$q', function ($http, $q) {
         });
     };
 
+    let getDistributions = function () {
+        return $http.get('https://covics-backend.herokuapp.com/distributions').then(function (response) {
+            return response.data ? response.data.distributions : [];
+        });
+    };
+
     return {
         "getCountryBorders": getCountryBorders,
-        "getAllStatistics": getAllStatistics
+        "getPredictions": getPredictions,
+        "getDistributions": getDistributions
     }
 
 

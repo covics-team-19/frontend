@@ -1,9 +1,11 @@
 <div class="view">
 
     <div class="presentation-alert alert alert-warning alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
         SARS-CoV-2 is spreading rapidly through communities. Covics-19 matches countries'
-        required medical resources to their actual healthcare capacity and coordinates medical resource sharing among them. <br/>
+        required medical resources to their actual healthcare capacity and coordinates medical resource sharing among
+        them. <br/>
         <a href="https://devpost.com/software/covics-19" target="_blank">Learn more</a>
     </div>
 
@@ -12,12 +14,14 @@
 </div>
 
 <script type="text/ng-template" id="countryDetailsTooltip.html">
-    <div class="country-tooltip">
-        <h2>
-            <span class="flag-icon flag-icon-{{selectedCountry.country_code.toLowerCase()}}"></span>
-            {{selectedCountry.country_name}}
+    <div class="country-popup">
+        <h2 class="clearfix">
+            <span class="flag-icon flag-icon-{{predictions[selectedCountry].country_code.toLowerCase()}}"></span>
+            {{predictions[selectedCountry].country_name}}
+
+            <a href="" class="change-view-btn pull-right" ng-click="toggleView()"><i class="fa fa-exchange-alt"></i></a>
         </h2>
-        <table class="table table-bordered">
+        <table class="table table-bordered" ng-show="view === 'predictions'">
             <tr>
                 <td></td>
                 <td class="text-center"><strong>Current</strong></td>
@@ -26,41 +30,62 @@
             <tr>
                 <td>Resources capacity</td>
                 <td class="text-right">
-                    {{selectedCountry.resources_capacity | number:0}}
+                    {{predictions[selectedCountry].resources_capacity | number:0}}
                 </td>
                 <td class="text-right" ng-style="{
-                        'background-color': selectedCountry.color,
-                        'color': selectedCountry.remaining_percent < 25 || !selectedCountry.resources_capacity ? '#fff' : '#333'}">
+                        'background-color': predictions[selectedCountry].color,
+                        'color': predictions[selectedCountry].remaining_percent < 25 || !predictions[selectedCountry].resources_capacity ? '#fff' : '#333'}">
                     {{getColor(10)}}
-                    ~{{selectedCountry.resources_prediction_3w | number:0}}
+                    ~{{predictions[selectedCountry].resources_prediction_3w | number:0}}
                 </td>
             </tr>
             <tr>
                 <td>Confirmed cases</td>
                 <td class="text-right">
-                    {{selectedCountry.confirmed | number:0}}
+                    {{predictions[selectedCountry].confirmed | number:0}}
                 </td>
                 <td class="text-right">
-                    ~{{selectedCountry.confirmed_prediction_3w | number:0}}
+                    ~{{predictions[selectedCountry].confirmed_prediction_3w | number:0}}
                 </td>
             </tr>
             <tr>
                 <td>Deaths</td>
                 <td class="text-right">
-                    {{selectedCountry.deaths | number:0}}
+                    {{predictions[selectedCountry].deaths | number:0}}
                 </td>
                 <td class="text-right">
-                    ~{{selectedCountry.deaths_prediction_3w | number:0}}
+                    ~{{predictions[selectedCountry].deaths_prediction_3w | number:0}}
                 </td>
             </tr>
             <tr>
                 <td>Recovered cases</td>
                 <td class="text-right">
-                    {{selectedCountry.recovered | number:0}}
+                    {{predictions[selectedCountry].recovered | number:0}}
                 </td>
                 <td class="text-right">
-                    ~{{selectedCountry.recovered_prediction_3w | number:0}}
+                    ~{{predictions[selectedCountry].recovered_prediction_3w | number:0}}
                 </td>
+            </tr>
+        </table>
+
+        <table class="table table-bordered" ng-show="view === 'distributions'"
+               ng-init="countryData = distributions[selectedCountry].from.length > 0 ? distributions[selectedCountry].from : distributions[selectedCountry].to">
+            <tr>
+                <td class="text-center" colspan="5"><strong>Recommended Exchange</strong></td>
+            </tr>
+            <tr>
+                <td class="text-center"><strong>{{distributions[selectedCountry].from.length > 0 ? 'From' : 'To'}}</strong></td>
+                <td class="text-center"><strong>Number</strong></td>
+            </tr>
+            <tr ng-repeat="distribution in countryData">
+                <td>
+                    <span class="flag-icon flag-icon-{{distribution.country.toLowerCase()}}"></span>
+                    {{countries2LettersCode[distribution.country]}}
+                </td>
+                <td class="text-right">{{distribution.number}}</td>
+            </tr>
+            <tr ng-if="!countryData.length">
+                <td colspan="5">No suggestion found</td>
             </tr>
         </table>
     </div>

@@ -80,8 +80,17 @@ body {
   }
 }
 
-.country-tooltip {
-  margin: -7px;
+.leaflet-container a.leaflet-popup-close-button {
+  margin: 5px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 7px;
+}
+
+.country-popup {
+  margin: -14px -20px;
+  min-width: 280px;
 
   h2 {
     margin: 0;
@@ -94,6 +103,27 @@ body {
 
   table {
     margin: 0;
+    border: 0;
+
+    tr:last-child {
+      td {
+        border-bottom: 0;
+      }
+      td:first-child {
+        border-left: 0;
+      }
+      td:last-child {
+        border-right: 0;
+      }
+    }
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 5px;
+  }
+
+  .change-view-btn {
+    margin-right: 20px;
   }
 
 }

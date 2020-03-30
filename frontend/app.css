@@ -67,10 +67,17 @@ body {
   margin-right: 8px;
   opacity: 0.7;
 }
-.country-tooltip {
-  margin: -7px;
+.leaflet-container a.leaflet-popup-close-button {
+  margin: 5px;
 }
-.country-tooltip h2 {
+.leaflet-popup-content-wrapper {
+  border-radius: 7px;
+}
+.country-popup {
+  margin: -14px -20px;
+  min-width: 280px;
+}
+.country-popup h2 {
   margin: 0;
   font-weight: bold;
   font-size: 12px;
@@ -78,8 +85,24 @@ body {
   letter-spacing: 0.1rem;
   padding: 10px;
 }
-.country-tooltip table {
+.country-popup table {
   margin: 0;
+  border: 0;
+}
+.country-popup table tr:last-child td {
+  border-bottom: 0;
+}
+.country-popup table tr:last-child td:first-child {
+  border-left: 0;
+}
+.country-popup table tr:last-child td:last-child {
+  border-right: 0;
+}
+.country-popup .leaflet-popup-content-wrapper {
+  border-radius: 5px;
+}
+.country-popup .change-view-btn {
+  margin-right: 20px;
 }
 #map_canvas {
   width: 100%;
