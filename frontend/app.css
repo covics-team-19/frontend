@@ -22,6 +22,25 @@ body {
 .view {
   height: calc(100% - 50px);
 }
+.tooltip {
+  z-index: 100000;
+}
+.presentation-alert {
+  position: absolute;
+  width: 95%;
+  max-width: 730px;
+  top: 70px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 100000;
+}
+@media (max-width: 860px) {
+  .presentation-alert {
+    top: 35%;
+  }
+}
 /*Map styles*/
 .map-container {
   margin: 0;
@@ -39,7 +58,6 @@ body {
 }
 .map-container .legend {
   text-align: left;
-  line-height: 18px;
   color: #555;
 }
 .map-container .legend i {

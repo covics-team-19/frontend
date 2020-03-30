@@ -141,12 +141,12 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
 
                 if (to) {
                     labels.push(
-                        '<i style="background:' + getColor(from + 1) + '"></i> ' +
-                        from + (to ? ' &ndash; ' + to + '%' : '+'));
+                        '<div class="clearfix"><i style="background:' + getColor(from + 1) + '"></i> ' +
+                        from + (to ? ' &ndash; ' + to + '%' : '+') + '</div>');
                 }
             }
 
-            div.innerHTML = labels.join('<br/>');
+            div.innerHTML = labels.join('');
             return div;
         };
 
