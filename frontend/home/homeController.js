@@ -126,6 +126,15 @@ app.controller('HomeController', ['$scope', '$templateCache', '$compile', '$q', 
         tooltipScope.distributions = $scope.distributions;
         tooltipScope.countries2LettersCode = $scope.countries2LettersCode;
         tooltipScope.view = $scope.predictions[countryCode].confirmed_prediction_3w ? 'predictions' : 'distributions';
+        tooltipScope.statusStyleCurrent = {
+            'background-color': getColor($scope.predictions[countryCode].remaining_percent_current),
+            'color': $scope.predictions[countryCode].remaining_percent_current < 25 || !$scope.predictions[countryCode].covid19_capacity ? '#fff' : '#333'
+        };
+        tooltipScope.statusStylePrediction3w = {
+            'background-color': getColor($scope.predictions[countryCode].remaining_percent),
+            'color': $scope.predictions[countryCode].remaining_percent < 25 || !$scope.predictions[countryCode].covid19_capacity ? '#fff' : '#333'
+        };
+
         tooltipScope.toggleView = function () {
             tooltipScope.view = tooltipScope.view === 'predictions' ? 'distributions' : 'predictions'
         };

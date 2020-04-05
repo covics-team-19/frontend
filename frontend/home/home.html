@@ -28,8 +28,12 @@
         </h2>
         <table class="table table-bordered" ng-show="view === 'predictions'">
             <tr>
-                <td class="text-center" colspan="5"><strong>Resources capacity:
-                    {{predictions[selectedCountry].resources_capacity | number:0}}</strong></td>
+                <td colspan="2"><strong>Resources Capacity</strong></td>
+                <td class="text-center"><strong>{{predictions[selectedCountry].resources_capacity | number:0}}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>COVID-19 Capacity</strong></td>
+                <td class="text-center"><strong>{{predictions[selectedCountry].covid19_capacity | number:0}}</strong></td>
             </tr>
             <tr>
                 <td></td>
@@ -42,7 +46,7 @@
                     {{predictions[selectedCountry].confirmed | number:0}}
                 </td>
                 <td class="text-right">
-                    ~{{predictions[selectedCountry].confirmed_prediction_3w | number:0}}
+                    {{predictions[selectedCountry].confirmed_prediction_3w | number:0}}
                 </td>
             </tr>
             <tr>
@@ -51,7 +55,7 @@
                     {{predictions[selectedCountry].deaths | number:0}}
                 </td>
                 <td class="text-right">
-                    ~{{predictions[selectedCountry].deaths_prediction_3w | number:0}}
+                    {{predictions[selectedCountry].deaths_prediction_3w | number:0}}
                 </td>
             </tr>
             <tr>
@@ -60,18 +64,25 @@
                     {{predictions[selectedCountry].recovered | number:0}}
                 </td>
                 <td class="text-right">
-                    ~{{predictions[selectedCountry].recovered_prediction_3w | number:0}}
+                    {{predictions[selectedCountry].recovered_prediction_3w | number:0}}
                 </td>
             </tr>
             <tr>
-                <td>Resources requirements</td>
+                <td>Estimated Hospitalizations</td>
                 <td class="text-right">
                     {{predictions[selectedCountry].resources_requirements | number:0}}
                 </td>
-                <td class="text-right" ng-style="{
-                        'background-color': predictions[selectedCountry].color,
-                        'color': predictions[selectedCountry].remaining_percent < 25 || !predictions[selectedCountry].resources_capacity ? '#fff' : '#333'}">
-                    ~{{predictions[selectedCountry].resources_requirements_prediction_3w | number:0}}
+                <td class="text-right">
+                    {{predictions[selectedCountry].resources_requirements_prediction_3w | number:0}}
+                </td>
+            </tr>
+            <tr>
+                <td>Resources Status (remaining)</td>
+                <td class="text-right" ng-style="statusStyleCurrent">
+                    {{predictions[selectedCountry].remaining_capacity | number:0}}
+                </td>
+                <td class="text-right" ng-style="statusStylePrediction3w">
+                    {{predictions[selectedCountry].remaining_capacity_prediction_3w | number:0}}
                 </td>
             </tr>
         </table>
