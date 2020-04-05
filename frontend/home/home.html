@@ -97,7 +97,7 @@
                     'To'}}</strong></td>
                 <td class="text-center"><strong>Number</strong></td>
             </tr>
-            <tr ng-repeat="distribution in countryData">
+            <tr ng-repeat="distribution in countryData | orderBy:'number':'desc'">
                 <td>
                     <span class="flag-icon flag-icon-{{distribution.country.toLowerCase()}}"></span>
                     {{countries2LettersCode[distribution.country]}}
